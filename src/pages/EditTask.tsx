@@ -25,9 +25,6 @@ export default function EditTask() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Task ID:', id);  
-
-    
     api.get('/categories')
       .then(res => {
         setCategories(res.data.data);
@@ -35,7 +32,6 @@ export default function EditTask() {
       .catch(() => setError('Error loading categories'));
 
     if (id) {
-      
       api.get(`/tasks/${id}`)
         .then(res => {
           setTask(res.data.data);
@@ -64,7 +60,7 @@ export default function EditTask() {
       setSuccessMessage('Changes saved successfully!');
       setTimeout(() => {
         navigate('/dashboard');
-      }, 2000); // Redirect after success message
+      }, 2000);
     } catch (err: any) {
       if (err.response?.data?.errors) {
         setValidationErrors(err.response.data.errors);
@@ -117,7 +113,7 @@ export default function EditTask() {
           >
             <option value="pending">Pending</option>
             <option value="in-progress">In Progress</option>
-            <option value="done">Done</option>
+            <option value="completed">Done</option>
           </select>
           {validationErrors.status && <p className="text-red-500 text-sm">{validationErrors.status[0]}</p>}
         </div>

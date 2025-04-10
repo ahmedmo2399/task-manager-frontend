@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import api from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 interface Task {
   id: number;
@@ -12,17 +12,17 @@ interface Task {
 export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await api.get('/tasks');
+        const response = await api.get("/tasks");
         setTasks(response.data.data);
       } catch (err) {
-        console.error('Error fetching tasks', err);
-        navigate('/'); 
+        console.error("Error fetching tasks", err);
+        navigate("/");
       } finally {
         setLoading(false);
       }
@@ -32,25 +32,26 @@ export default function Dashboard() {
   }, []);
 
   const handleLogout = async () => {
-    await api.post('/logout');
-    localStorage.removeItem('token');
-    navigate('/');
+    await api.post("/logout");
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
   const handleDelete = async (taskId: number) => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
+    if (window.confirm("Are you sure you want to delete this task?")) {
       try {
         await api.delete(`/tasks/${taskId}`);
-        setTasks(tasks.filter(task => task.id !== taskId)); 
-                alert('Task deleted successfully');
+        setTasks(tasks.filter((task) => task.id !== taskId));
+        alert("Task deleted successfully");
       } catch (err) {
-        setError('An error occurred while deleting the task');
-        console.error('Error:', err);
+        setError("An error occurred while deleting the task");
+        console.error("Error:", err);
       }
     }
   };
 
-  if (loading) return <p className="text-center text-lg text-gray-600">Loading...</p>;
+  if (loading)
+    return <p className="text-center text-lg text-gray-600">Loading...</p>;
 
   return (
     <div className="max-w-4xl mx-auto p-8">
@@ -71,10 +72,23 @@ export default function Dashboard() {
       ) : (
         <ul className="space-y-6">
           {tasks.map((task) => (
-            <li key={task.id} className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <li
+              key={task.id}
+              className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
+            >
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold text-gray-900">{task.title}</h3>
-                <span className="text-sm text-gray-500">{task.status}</span>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {task.title}
+                </h3>
+                <span
+  className={`text-sm font-semibold px-3 py-1 rounded-full 
+    ${task.status === 'Completed' ? 'bg-green-500 text-white' :
+    task.status === 'In Progress' ? 'bg-yellow-500 text-white' :
+    task.status === 'Pending' ? 'bg-red-500 text-white' :
+    'bg-gray-300 text-gray-700'}`}
+>
+  {task.status}
+</span>
               </div>
               <p className="text-gray-700 mb-4">{task.description}</p>
 
@@ -97,14 +111,22 @@ export default function Dashboard() {
         </ul>
       )}
 
-      <div className="mt-8 text-center">
-        <button
-          onClick={() => navigate('/tasks/create')}
-          className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-all duration-300"
-        >
-          + Add New Task
-        </button>
-      </div>
+<div className="mt-8 text-center flex justify-center gap-6">
+  <button
+    onClick={() => navigate("/tasks/create")}
+    className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-all duration-300"
+  >
+    + Add New Task
+  </button>
+
+  <button
+    onClick={() => navigate("/categories/create")}
+    className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none transition-all duration-300 transform hover:scale-105"
+  >
+    + Add Category
+  </button>
+</div>
+
     </div>
   );
 }

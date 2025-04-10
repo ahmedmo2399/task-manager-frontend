@@ -15,24 +15,22 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      console.log('sent data', {name, email, password, passwordConfirmation})
+      console.log('sent data', { name, email, password, passwordConfirmation });
       const response = await api.post("/register", {
         name,
         email,
         password,
         password_confirmation: passwordConfirmation,
       });
-      console.log('response', response)
-      
 
       const token = response.data.token;
       localStorage.setItem("token", token);
 
       navigate("/dashboard");
     } catch (err: any) {
-      console.log('error', err)
+      console.log('error', err);
       const message =
-        err.response?.data?.message || "حدث خطأ أثناء إنشاء الحساب";
+        err.response?.data?.message || "An error occurred while creating the account";
       setError(message);
     }
   };
@@ -45,13 +43,13 @@ const Register = () => {
         transition={{ duration: 0.6 }}
         className="bg-white/10 backdrop-blur-md shadow-2xl rounded-2xl p-8 w-full max-w-md text-white"
       >
-        <h2 className="text-3xl font-bold text-center mb-6">إنشاء حساب</h2>
+        <h2 className="text-3xl font-bold text-center mb-6">Create Account</h2>
 
         {error && <p className="text-red-300 mb-4 text-center">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block mb-1 text-sm">الاسم</label>
+            <label className="block mb-1 text-sm">Name</label>
             <input
               type="text"
               value={name}
@@ -62,7 +60,7 @@ const Register = () => {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">البريد الإلكتروني</label>
+            <label className="block mb-1 text-sm">Email</label>
             <input
               type="email"
               value={email}
@@ -73,7 +71,7 @@ const Register = () => {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">كلمة المرور</label>
+            <label className="block mb-1 text-sm">Password</label>
             <input
               type="password"
               value={password}
@@ -84,7 +82,7 @@ const Register = () => {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">تأكيد كلمة المرور</label>
+            <label className="block mb-1 text-sm">Confirm Password</label>
             <input
               type="password"
               value={passwordConfirmation}
@@ -100,8 +98,14 @@ const Register = () => {
             type="submit"
             className="w-full py-2 mt-2 bg-indigo-600 hover:bg-indigo-700 transition-colors rounded-lg font-semibold"
           >
-            إنشاء الحساب
+            Create Account
           </motion.button>
+          <p className="mt-4 text-center text-sm">
+            Already have an account?{' '}
+            <a href="/login" className="text-blue-300 hover:underline">
+              Login
+            </a>
+          </p>
         </form>
       </motion.div>
     </div>

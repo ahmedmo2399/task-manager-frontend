@@ -10,7 +10,7 @@ interface Category {
 export default function AddTask() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('pending');
+  const [status, setStatus] = useState('');
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [dueDate, setDueDate] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
@@ -20,10 +20,11 @@ export default function AddTask() {
 
   useEffect(() => {
     api.get('/categories')
-      .then(res => setCategories(res.data.data))
-      .catch((err) => {
+      .then(res => {
+        setCategories(res.data.data);
+      })
+      .catch(() => {
         setError('Error loading categories');
-        console.log('Error fetching categories:', err);
       });
   }, []);
 
@@ -48,10 +49,8 @@ export default function AddTask() {
       if (err.response?.data?.errors) {
         setValidationErrors(err.response.data.errors);
         setError('Error saving task');
-        console.log('Validation errors:', err.response.data.errors);
       } else {
         setError('Unknown error occurred while saving the task');
-        console.log('Error saving task:', err);
       }
     }
   };
